@@ -36,10 +36,10 @@ class Level():
         player_x = player.rect.centerx
         direction_x = player.direction.x
 
-        if player_x < 200 and direction_x == -1:
+        if player_x < (screen_width * .25) and direction_x == -1:
             self.world_shift = 8
             player.speed = 0
-        elif player_x > 1000 and direction_x == 1:
+        elif player_x > (screen_width * .75) and direction_x == 1:
             self.world_shift = -8
             player.speed = 0
         else:
