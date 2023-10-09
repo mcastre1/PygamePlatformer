@@ -18,6 +18,10 @@ class Player(pygame.sprite.Sprite):
         self.gravity = 0.8 # Like jump speed, this has to be positive because y coordinates are positive on the lower side of screen
         self.jump_speed = -16 # This is negative because y coordinates are positive on the lower side of screen
 
+        # player status
+        self.status = 'idle'
+        self.facing_right = True
+
     # Loads in all images in character graphics folder
     def import_character_assets(self):
         character_path = './graphics/character/'
@@ -29,14 +33,20 @@ class Player(pygame.sprite.Sprite):
 
     # Animates character sprite
     def animate(self):
-        animation = self.animations['run']
+        animation = self.animations[self.status]
 
         # loop over frame index
         self.frame_index += self.animation_speed
         if self.frame_index >= len(animation):
             self.frame_index = 0
 
-        self.image = animation[int(self.frame_index)]
+        image = self.image = animation[int(self.frame_index)]
+        if self.facing_right:
+            self.image = image
+        else:
+            flipped_image = pygame.transform.flip(image, True, False)
+            self.image = flipped_image
+
 
     # Function checks for pygame event key pressed
     def get_input(self):
@@ -44,13 +54,28 @@ class Player(pygame.sprite.Sprite):
 
         if keys[pygame.K_RIGHT]:
             self.direction.x = 1
+            self.facing_right = True
         elif keys[pygame.K_LEFT]:
             self.direction.x = -1
+            self.facing_right = False
         else:
             self.direction.x = 0
 
         if keys[pygame.K_SPACE]:
             self.jump()
+
+    def get_status(self):
+        if self.direction.y < 0:
+            self.status = 'jump'
+        elif self.direction.y > 1: # this is one to keep animation of fall and idle to spas out during collisions
+            self.status = 'fall'
+        else:
+            if self.direction.x > 0:
+                self.status = 'run'
+            elif self.direction.x < 0:
+                self.status = 'run'
+            else:
+                self.status = 'idle'
 
     # The more the player falls, the faster the character falls
     def apply_gravity(self):
@@ -63,4 +88,5 @@ class Player(pygame.sprite.Sprite):
     def update(self):
         # Check for key pressed event
         self.get_input()
+        self.get_status()
         self.animate()
