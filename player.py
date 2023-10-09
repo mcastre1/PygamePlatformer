@@ -21,6 +21,10 @@ class Player(pygame.sprite.Sprite):
         # player status
         self.status = 'idle'
         self.facing_right = True
+        self.on_ground = False
+        self.on_ceiling = False
+        self.on_left = False
+        self.on_right = False
 
     # Loads in all images in character graphics folder
     def import_character_assets(self):
@@ -40,12 +44,22 @@ class Player(pygame.sprite.Sprite):
         if self.frame_index >= len(animation):
             self.frame_index = 0
 
-        image = self.image = animation[int(self.frame_index)]
+        # Keeping track of image selected
+        image = animation[int(self.frame_index)]
+        # Check if player is facing right or left
         if self.facing_right:
             self.image = image
-        else:
+        else: # flip the image on the x axis, horizontally, if player is facing left
             flipped_image = pygame.transform.flip(image, True, False)
             self.image = flipped_image
+
+        # Set the rect agains sprites
+        if self.on_ground:
+            self.rect = self.image.get_rect(midbottom = self.rect.midbottom)
+        elif self.on_ceiling:
+            self.rect = self.image.get_rect(midtop = self.rect.midtop)
+        else:
+            self.rect = self.image.get_rect(center = self.rect.center)
 
 
     # Function checks for pygame event key pressed

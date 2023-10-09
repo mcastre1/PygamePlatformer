@@ -69,12 +69,17 @@ class Level():
             if sprite.rect.colliderect(player.rect):
                 if player.direction.y > 0:
                     player.rect.bottom = sprite.rect.top
+                    player.on_ground = True
                 elif player.direction.y < 0:
                     player.rect.top = sprite.rect.bottom
+                    player.on_ceiling = True
                 
                 player.direction.y = 0
                 
-
+        if player.on_ground and player.direction.y < 0 or player.direction.y > 1:
+            player.on_ground = False
+        if player.on_ceiling and player.direction.y > 0:
+            player.on_ceiling = False
 
     def run(self):
         # Level tiles
