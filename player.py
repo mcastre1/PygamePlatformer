@@ -9,6 +9,8 @@ class Player(pygame.sprite.Sprite):
         # Vector to keep track of player movement
         self.direction = pygame.math.Vector2(0, 0)
 
+        self.speed = 8
+
     # Function checks for pygame event key pressed
     def get_input(self):
         keys = pygame.key.get_pressed()
@@ -24,4 +26,4 @@ class Player(pygame.sprite.Sprite):
         # Check for key pressed event
         self.get_input()
         # Move player left or right
-        self.rect.x += self.direction.x
+        self.rect.x += self.direction.x * self.speed
