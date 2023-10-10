@@ -29,7 +29,7 @@ class Level():
                     self.tiles.add(Tile((x, y), tile_size))
 
                 if col == 'P':
-                    self.player.add(Player((x, y)))
+                    self.player.add(Player((x, y), self.display_surface))
 
     # This function helps scroll the whole level when player reaches a threshold
     # This simulates a 'camera'
