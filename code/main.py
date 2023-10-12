@@ -1,0 +1,28 @@
+import pygame, sys
+from settings import *
+from level import Level
+from game_data import level_0
+
+# Pygame setup
+pygame.init()
+
+# screen width and height come from settings.py file
+screen = pygame.display.set_mode((screen_width, screen_height))
+
+clock = pygame.time.Clock()
+
+level = Level(level_0,screen)
+
+# Game Loop
+while True:
+    # Events
+    for event in pygame.event.get():
+        # Quit event
+        if event.type == pygame.QUIT:
+            pygame.quit()
+            sys.exit()
+
+    screen.fill('black')
+    level.run()
+
+    clock.tick(60)
