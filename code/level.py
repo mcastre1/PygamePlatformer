@@ -1,7 +1,7 @@
 import pygame
 from support import import_csv_layout, import_cut_graphic
 from settings import tile_size
-from tiles import Tile, StaticTile, Crate
+from tiles import Tile, StaticTile, Crate, AnimatedTile
 
 class Level:
     def __init__(self, level_data, display_surface):
@@ -22,6 +22,10 @@ class Level:
         # Crates
         crate_layout = import_csv_layout(level_data['crates'])
         self.crate_sprites = self.create_tile_group(crate_layout, 'crates')
+
+        # Coins
+        coin_layout = import_csv_layout(level_data['coins'])
+        self.coin_sprites = self.create_tile_group(coin_layout, 'coins')
 
     # creates and returns a group depending on type
     def create_tile_group(self, layout, type):
@@ -46,6 +50,9 @@ class Level:
                     if type == 'crates':
                         sprite = Crate(tile_size, x, y)
 
+                    if type == 'coins':
+                        sprite = AnimatedTile(tile_size, x, y, '../graphics/coins/gold')
+
                     sprite_group.add(sprite)
 
 
@@ -62,5 +69,9 @@ class Level:
         # crate
         self.crate_sprites.update(self.world_shift)
         self.crate_sprites.draw(self.display_surface)
+
+        # coins
+        self.coin_sprites.update(self.world_shift)
+        self.coin_sprites.draw(self.display_surface)
         
 
