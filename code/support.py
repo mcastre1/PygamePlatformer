@@ -39,7 +39,7 @@ def import_cut_graphic(path):
             y = row * tile_size
 
             # Here we blit a rect from the original surface into a new surface (the cut tile)
-            new_surf = pygame.Surface((tile_size, tile_size))
+            new_surf = pygame.Surface((tile_size, tile_size), flags=pygame.SRCALPHA)
             new_surf.blit(surface, (0,0), pygame.Rect(x,y,tile_size,tile_size))
             cut_tiles.append(new_surf)
     

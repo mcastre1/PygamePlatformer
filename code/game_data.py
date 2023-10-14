@@ -5,7 +5,7 @@ level_0 = {
     'bg palms':'../levels/0/level_0_bg_palms.csv',
     'crates':'../levels/0/level_0_crates.csv',
     'enemies':'../levels/0/level_0_enemies.csv',
-    'constraints':'',
+    'constraints':'../levels/0/level_0_constraint.csv',
     'player':'../levels/0/level_0_player.csv',
     'grass':'../levels/0/level_0_grass.csv'
 }
