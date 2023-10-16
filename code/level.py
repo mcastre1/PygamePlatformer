@@ -1,15 +1,23 @@
 import pygame
 from support import import_csv_layout, import_cut_graphic
-from settings import tile_size
+from settings import tile_size, screen_height
 from tiles import StaticTile, Crate, Coin, Palm, Tile
 from enemy import Enemy
+from decoration import Sky, Water, Clouds
+
 
 class Level:
     def __init__(self, level_data, display_surface):
         # general setup
         self.display_surface = display_surface
         self.level_data = level_data
-        self.world_shift = 0
+        self.world_shift = -6
+
+        # Player
+        player_layout = import_csv_layout(level_data['player'])
+        self.player = pygame.sprite.GroupSingle()
+        self.goal = pygame.sprite.GroupSingle()
+        self.player_setup(player_layout)
 
         # Read csv created by tiled software
         # Terrain setup
@@ -43,6 +51,30 @@ class Level:
         # constraints
         constraint_layout = import_csv_layout(level_data['constraints'])
         self.constraint_sprites = self.create_tile_group(constraint_layout, 'constraints')
+
+        # DECORATIONS
+        # sky
+        self.sky = Sky(8)
+
+        # water
+        level_width = len(terrain_layout[0]) * tile_size
+        self.water = Water(screen_height-25, level_width)
+
+        # clouds
+        self.clouds = Clouds(400, level_width, 20)
+
+
+    def player_setup(self, layout):
+        for row_index, row in enumerate(layout):
+            for col_index, id in enumerate(row):
+                x = col_index * tile_size
+                y = row_index * tile_size  
+                if id == '0':
+                    print('player goes here')
+                if id == '1':
+                    hat_surface = pygame.image.load('../graphics/character/hat.png').convert_alpha()
+                    sprite = StaticTile(tile_size, x, y, hat_surface)
+                    self.goal.add(sprite)
 
     # creates and returns a group depending on type
     def create_tile_group(self, layout, type):
@@ -99,7 +131,14 @@ class Level:
             if pygame.sprite.spritecollide(enemy, self.constraint_sprites, False):
                 enemy.reverse()
 
-    def run(self):       
+    def run(self):
+        # decoration
+        # sky
+        self.sky.draw(self.display_surface)
+
+        # clouds
+        self.clouds.draw(self.display_surface, self.world_shift)
+
         # bg palms
         self.bg_palm_sprites.update(self.world_shift)
         self.bg_palm_sprites.draw(self.display_surface)
@@ -134,7 +173,12 @@ class Level:
         self.coin_sprites.update(self.world_shift)
         self.coin_sprites.draw(self.display_surface)
 
-        
+        #player sprites
+        self.goal.update(self.world_shift)
+        self.goal.draw(self.display_surface)
+
+        # water
+        self.water.draw(self.display_surface, self.world_shift)        
         
         
 
